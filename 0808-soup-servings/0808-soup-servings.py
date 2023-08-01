@@ -1,30 +1,20 @@
 class Solution:
     def soupServings(self, n: int) -> float:
-        # Helper function to calculate the probability recursively
-        def serve(a, b, memo):
-            if a <= 0 and b <= 0:  # Base case: both soups are empty
-                return 0.5
-            if a <= 0:  # Base case: soup A is empty
-                return 1.0
-            if b <= 0:  # Base case: soup B is empty
-                return 0.0
-            if (a, b) in memo:
-                return memo[(a, b)]
-            
-            # Calculate the probability for each operation
-            prob = 0.25 * (
-                serve(a - 100, b, memo) +
-                serve(a - 75, b - 25, memo) +
-                serve(a - 50, b - 50, memo) +
-                serve(a - 25, b - 75, memo)
-            )
-            
-            memo[(a, b)] = prob
-            return prob
+        m = ceil(n / 25)
+        dp = {}
 
-        # Check the edge case where n is larger than the maximum allowed value
-        if n >= 5000:
-            return 1.0
+        def calculate_dp(i, j):
+            return (dp[max(0, i - 4)][j] + dp[max(0, i - 3)][j - 1] +
+                    dp[max(0, i - 2)][max(0, j - 2)]
+                    + dp[i - 1][max(0, j - 3)]) / 4
 
-        memo = {}
-        return serve(n, n, memo)
+        dp[0] = {0: 0.5}
+        for k in range(1, m + 1):
+            dp[0][k] = 1
+            dp[k] = {0: 0}
+            for j in range(1, k + 1):
+                dp[j][k] = calculate_dp(j, k)
+                dp[k][j] = calculate_dp(k, j)
+            if dp[k][k] > 1 - 1e-5:
+                return 1
+        return dp[m][m]
