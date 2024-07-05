@@ -1,4 +1,3 @@
-# Write your MySQL query statement below
-SELECT eu.unique_id AS unique_id, e.name
+SELECT e.name, eu.unique_id
 FROM Employees e
-LEFT JOIN EmployeeUNI eu USING(id)
+LEFT JOIN EmployeeUNI eu ON e.id = eu.id;
