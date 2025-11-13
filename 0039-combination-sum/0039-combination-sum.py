@@ -2,7 +2,7 @@ from itertools import combinations
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
         result = []
-        candidates.sort()  # 정렬하면 가지치기 쉬움
+        candidates.sort(reverse=True)
 
         def dfs(index: int, path: List[int], total: int):
             if total == target:
